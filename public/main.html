@@ -432,15 +432,9 @@ socket.on("message",(msg)=>{
 
   renderMessage(msg);
 
-  if(currentUser && msg.user!==currentUser.username){
-    showNotification(
-      msg.user,
-      msg.text || "Sent media"
-    );
-  }
-
   if(
     currentUser &&
+    msg.user!==currentUser.username &&
     msg.text &&
     msg.text.includes("@"+currentUser.username)
   ){
@@ -448,6 +442,15 @@ socket.on("message",(msg)=>{
       "You were tagged",
       msg.user + " tagged you"
     );
+  }
+});
+
+socket.on("deleteMessage",(id)=>{
+
+  const msg=document.getElementById("msg-"+id);
+
+  if(msg){
+    msg.remove();
   }
 });
 
@@ -465,6 +468,7 @@ function renderMessage(msg){
   const div=document.createElement("div");
 
   div.className="message";
+  div.id="msg-"+msg.id;
 
   let media="";
 
@@ -507,6 +511,26 @@ function renderMessage(msg){
 
         ${media}
 
+        ${msg.user===currentUser?.username
+        ? `
+        <button
+          onclick="unsendMessage(${msg.id})"
+          style="
+            margin-top:6px;
+            background:#ff3b30;
+            color:white;
+            border:none;
+            border-radius:10px;
+            padding:6px;
+            cursor:pointer;
+          "
+        >
+          Unsend
+        </button>
+        `
+        : ""
+        }
+
         <div class="time">
           ${msg.time}
         </div>
@@ -541,6 +565,11 @@ function sendMessage(){
   });
 
   input.value="";
+}
+
+function unsendMessage(id){
+
+  socket.emit("unsendMessage",id);
 }
 
 document
