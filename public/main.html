@@ -316,8 +316,19 @@ button{
 <script>
 const socket=io();
 
-const params=new URLSearchParams(window.location.search);
-const username=params.get("user")||"user";
+let username=localStorage.getItem("username");
+
+if(!username){
+  username=prompt("Choose a username");
+
+  if(!username || !username.trim()){
+    username="user";
+  }
+
+  username=username.trim();
+
+  localStorage.setItem("username",username);
+}
 
 const saved=JSON.parse(localStorage.getItem("chatUser"))||{};
 let profilePic=saved.profilePic||"user.png";
@@ -346,6 +357,7 @@ function showNotification(title,body){
 
 function logout(){
   localStorage.removeItem("chatUser");
+  localStorage.removeItem("username");
   window.location.href="index.html";
 }
 
