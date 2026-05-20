@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAUSD LATTC STUDENT LOGIN</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f7ff;
+}
+
+/* HEADER */
+.header {
+  background: #1a73e8;
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* HERO */
+.hero {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 34px;
+}
+
+.hero p {
+  color: #555;
+  margin-top: 6px;
+}
+
+/* CARDS */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 30px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  color: #1a73e8;
+}
+
+.card p {
+  font-size: 13px;
+  color: #555;
+  margin-top: 6px;
+}
+
+/* FULLSCREEN APP */
+.app-frame {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: none;
+  z-index: 9999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo">LAUSD LATTC STUDENT LOGIN</div>
+</div>
+
+<div class="hero">
+  <h1>Welcome to Lausd Student Help Desk</h1>
+  <p>Select a subject to start learning</p>
+</div>
+
+<div class="container">
+
+  <div class="card" onclick="openApp()">
+    <h3>Math</h3>
+    <p>Algebra, geometry, problem solving</p>
+  </div>
+
+  <div class="card" onclick="openApp()">
+    <h3>Science</h3>
+    <p>Physics, chemistry, biology</p>
+  </div>
+
+  <div class="card" onclick="openApp()">
+    <h3>Reading</h3>
+    <p>Comprehension and vocabulary</p>
+  </div>
+
+  <div class="card" onclick="openApp()">
+    <h3>Language</h3>
+    <p>Grammar and writing skills</p>
+  </div>
+
+</div>
+
+<!-- FULLSCREEN IFRAME -->
+<iframe id="appFrame" class="app-frame"></iframe>
+
+<script>
+function openApp() {
+  const frame = document.getElementById("appFrame");
+
+  frame.src = "index.html";
+  frame.style.display = "block";
+
+  document.body.style.overflow = "hidden";
+}
+
+function closeApp() {
+  const frame = document.getElementById("appFrame");
+
+  frame.style.display = "none";
+  frame.src = "";
+
+  document.body.style.overflow = "auto";
+}
+
+/* ESC TO EXIT FULLSCREEN */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeApp();
+  }
+});
+</script>
+
+</body>
+</html>
