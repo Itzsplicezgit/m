@@ -623,6 +623,26 @@ document
   });
 });
 
+window.addEventListener("message",(event)=>{
+
+  if(
+    !event.data ||
+    event.data.type!=="sendReel"
+  ){
+    return;
+  }
+
+  socket.emit("message",{
+    user:currentUser.username,
+    pfp:profilePic,
+    url:event.data.url,
+    type:"video",
+    time:getTime()
+  });
+
+  closeReels();
+});
+
 async function changePfp(){
 
   const input=document.createElement("input");
