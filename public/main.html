@@ -130,10 +130,28 @@ html,body{
   background:black;
 }
 
+.bottom-row{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+}
+
 .time{
   font-size:11px;
   opacity:.6;
-  text-align:right;
+}
+
+.delete-btn{
+  background:none;
+  border:none;
+  color:#666;
+  font-size:12px;
+  padding:0;
+  width:auto;
+  height:auto;
+  cursor:pointer;
+  line-height:1;
 }
 
 .input-area{
@@ -390,9 +408,7 @@ function requestNotificationPermission(){
 
 function showNotification(title,body){
 
-  if(
-    document.hasFocus()
-  ){
+  if(document.hasFocus()){
     return;
   }
 
@@ -520,35 +536,24 @@ function renderMessage(msg){
 
         ${media}
 
-        ${msg.user===currentUser?.username
-        ? `
-        <button
-          onclick="unsendMessage(${msg.id})"
-          style="
-            margin-top:4px;
-            width:18px;
-            height:18px;
-            min-height:18px;
-            border-radius:50%;
-            background:#ff3b30;
-            color:white;
-            border:none;
-            font-size:11px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:0;
-            cursor:pointer;
-          "
-        >
-          ×
-        </button>
-        `
-        : ""
-        }
+        <div class="bottom-row">
 
-        <div class="time">
-          ${msg.time}
+          ${msg.user===currentUser?.username
+          ? `
+          <button
+            class="delete-btn"
+            onclick="unsendMessage(${msg.id})"
+          >
+            ×
+          </button>
+          `
+          : ""
+          }
+
+          <div class="time">
+            ${msg.time}
+          </div>
+
         </div>
 
       </div>
