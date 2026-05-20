@@ -33,6 +33,7 @@ html,body{
   justify-content:space-between;
   padding:0 12px;
   border-bottom:1px solid #e6e6e6;
+  background:white;
 }
 
 .header-left{
@@ -82,6 +83,7 @@ html,body{
   flex:1;
   overflow-y:auto;
   padding:16px;
+  background:#fff;
 }
 
 .message{
@@ -125,6 +127,7 @@ html,body{
   object-fit:cover;
   border-radius:14px;
   cursor:pointer;
+  background:black;
 }
 
 .time{
@@ -138,6 +141,7 @@ html,body{
   gap:10px;
   padding:10px;
   border-top:1px solid #e6e6e6;
+  background:white;
 }
 
 .input-area input{
@@ -146,6 +150,7 @@ html,body{
   border-radius:22px;
   border:1px solid #ddd;
   padding:0 14px;
+  outline:none;
 }
 
 button{
@@ -232,7 +237,6 @@ button{
   background:black;
   z-index:100000;
   display:none;
-  flex-direction:column;
 }
 
 .reels-frame{
@@ -278,6 +282,7 @@ button{
 <div class="chat-container">
 
   <div class="header">
+
     <div class="header-left">
       <img id="myPfp" class="pfp-clickable" onclick="changePfp()">
       <span id="myName"></span>
@@ -287,16 +292,30 @@ button{
       <button class="reels-btn" onclick="openReels()">Reels</button>
       <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
+
   </div>
 
   <div class="messages" id="messages"></div>
 
   <div class="input-area">
     <input type="file" id="fileInput" accept="image/*,video/*" hidden>
-    <input type="text" id="messageInput" placeholder="Message or @tag someone">
 
-    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">+</button>
-    <button class="send-btn" onclick="sendMessage()">Send</button>
+    <input
+      type="text"
+      id="messageInput"
+      placeholder="Message or @tag someone"
+    >
+
+    <button
+      class="upload-btn"
+      onclick="document.getElementById('fileInput').click()"
+    >
+      +
+    </button>
+
+    <button class="send-btn" onclick="sendMessage()">
+      Send
+    </button>
   </div>
 
 </div>
@@ -308,7 +327,7 @@ button{
 
 <div class="reels-overlay" id="reelsOverlay">
   <div class="reels-close" onclick="closeReels()">✕</div>
-  <iframe class="reels-frame" src="" id="reelsFrame"></iframe>
+  <iframe class="reels-frame" id="reelsFrame"></iframe>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -316,25 +335,48 @@ button{
 <script>
 const socket=io();
 
-let username=localStorage.getItem("username");
+const token=localStorage.getItem("token");
 
-if(!username){
-  username=prompt("Choose a username");
-
-  if(!username || !username.trim()){
-    username="user";
-  }
-
-  username=username.trim();
-
-  localStorage.setItem("username",username);
+if(!token){
+  window.location.href="index.html";
 }
 
-const saved=JSON.parse(localStorage.getItem("chatUser"))||{};
-let profilePic=saved.profilePic||"user.png";
+let currentUser=null;
 
-document.getElementById("myName").textContent=username;
-document.getElementById("myPfp").src=profilePic;
+let profilePic="user.png";
+
+const API="/api";
+
+async function loadUser(){
+  try{
+
+    const res=await fetch(API + "/me",{
+      headers:{
+        Authorization:"Bearer " + token
+      }
+    });
+
+    if(!res.ok){
+      logout();
+      return;
+    }
+
+    const user=await res.json();
+
+    currentUser=user;
+
+    profilePic=user.profilePic;
+
+    document.getElementById("myName").textContent=user.username;
+
+    document.getElementById("myPfp").src=user.profilePic;
+
+  }catch(err){
+    logout();
+  }
+}
+
+loadUser();
 
 requestNotificationPermission();
 
@@ -347,7 +389,9 @@ function requestNotificationPermission(){
 }
 
 function showNotification(title,body){
-  if("Notification" in window && Notification.permission==="granted"){
+  if("Notification" in window &&
+     Notification.permission==="granted"){
+
     new Notification(title,{
       body:body,
       icon:profilePic
@@ -356,8 +400,7 @@ function showNotification(title,body){
 }
 
 function logout(){
-  localStorage.removeItem("chatUser");
-  localStorage.removeItem("username");
+  localStorage.removeItem("token");
   window.location.href="index.html";
 }
 
@@ -386,14 +429,25 @@ socket.on("loadMessages",(msgs)=>{
 });
 
 socket.on("message",(msg)=>{
+
   renderMessage(msg);
 
-  if(msg.user!==username){
-    showNotification(msg.user,msg.text || "Sent media");
+  if(currentUser && msg.user!==currentUser.username){
+    showNotification(
+      msg.user,
+      msg.text || "Sent media"
+    );
   }
 
-  if(msg.text && msg.text.includes("@"+username)){
-    showNotification("You were tagged",msg.user+" tagged you");
+  if(
+    currentUser &&
+    msg.text &&
+    msg.text.includes("@"+currentUser.username)
+  ){
+    showNotification(
+      "You were tagged",
+      msg.user + " tagged you"
+    );
   }
 });
 
@@ -405,38 +459,70 @@ function highlightTags(text){
 }
 
 function renderMessage(msg){
+
   const messages=document.getElementById("messages");
 
   const div=document.createElement("div");
+
   div.className="message";
 
   let media="";
 
   if(msg.type==="image"){
-    media=`<img class="media" src="${msg.url}" onclick="openFullscreen('image','${msg.url}')">`;
+    media=`
+      <img
+        class="media"
+        src="${msg.url}"
+        onclick="openFullscreen('image','${msg.url}')"
+      >
+    `;
   }
 
   if(msg.type==="video"){
-    media=`<video class="media" src="${msg.url}" muted onclick="openFullscreen('video','${msg.url}')"></video>`;
+    media=`
+      <video
+        class="media"
+        src="${msg.url}"
+        muted
+        onclick="openFullscreen('video','${msg.url}')"
+      ></video>
+    `;
   }
 
   div.innerHTML=`
     <img class="avatar" src="${msg.pfp}">
+
     <div class="content">
-      <div class="username">${msg.user}</div>
-      <div class="bubble">
-        ${msg.text ? `<div>${highlightTags(msg.text)}</div>` : ""}
-        ${media}
-        <div class="time">${msg.time}</div>
+
+      <div class="username">
+        ${msg.user}
       </div>
+
+      <div class="bubble">
+
+        ${msg.text
+          ? `<div>${highlightTags(msg.text)}</div>`
+          : ""
+        }
+
+        ${media}
+
+        <div class="time">
+          ${msg.time}
+        </div>
+
+      </div>
+
     </div>
   `;
 
   messages.appendChild(div);
+
   messages.scrollTop=messages.scrollHeight;
 }
 
 function sendMessage(){
+
   if(!chatUnlocked){
     document.getElementById("lockOverlay").style.display="flex";
     return;
@@ -447,7 +533,7 @@ function sendMessage(){
   if(!input.value.trim()) return;
 
   socket.emit("message",{
-    user:username,
+    user:currentUser.username,
     pfp:profilePic,
     text:input.value,
     type:"text",
@@ -457,12 +543,16 @@ function sendMessage(){
   input.value="";
 }
 
-document.getElementById("fileInput").addEventListener("change",async(e)=>{
+document
+.getElementById("fileInput")
+.addEventListener("change",async(e)=>{
+
   const file=e.target.files[0];
 
   if(!file) return;
 
   const form=new FormData();
+
   form.append("file",file);
 
   const res=await fetch("/upload",{
@@ -473,36 +563,47 @@ document.getElementById("fileInput").addEventListener("change",async(e)=>{
   const data=await res.json();
 
   socket.emit("message",{
-    user:username,
+    user:currentUser.username,
     pfp:profilePic,
     url:data.url,
-    type:file.type.startsWith("image") ? "image" : "video",
+    type:file.type.startsWith("image")
+      ? "image"
+      : "video",
     time:getTime()
   });
 });
 
-function changePfp(){
+async function changePfp(){
+
   const input=document.createElement("input");
 
   input.type="file";
   input.accept="image/*";
 
-  input.onchange=(e)=>{
+  input.onchange=async(e)=>{
+
     const file=e.target.files[0];
 
     if(!file) return;
 
     const reader=new FileReader();
 
-    reader.onload=(event)=>{
+    reader.onload=async(event)=>{
+
       profilePic=event.target.result;
 
       document.getElementById("myPfp").src=profilePic;
 
-      const saved=JSON.parse(localStorage.getItem("chatUser"))||{};
-      saved.profilePic=profilePic;
-
-      localStorage.setItem("chatUser",JSON.stringify(saved));
+      await fetch(API + "/update-pfp",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          Authorization:"Bearer " + token
+        },
+        body:JSON.stringify({
+          profilePic
+        })
+      });
     };
 
     reader.readAsDataURL(file);
@@ -512,40 +613,59 @@ function changePfp(){
 }
 
 function openFullscreen(type,url){
+
   const fs=document.getElementById("fullscreen");
+
   const content=document.getElementById("fullscreenContent");
 
   if(type==="image"){
     content.innerHTML=`<img src="${url}">`;
   }else{
-    content.innerHTML=`<video src="${url}" controls autoplay></video>`;
+    content.innerHTML=`
+      <video
+        src="${url}"
+        controls
+        autoplay
+      ></video>
+    `;
   }
 
   fs.style.display="flex";
 }
 
 function closeFullscreen(){
+
   document.getElementById("fullscreen").style.display="none";
+
   document.getElementById("fullscreenContent").innerHTML="";
 }
 
 function openReels(){
+
   const overlay=document.getElementById("reelsOverlay");
+
   const frame=document.getElementById("reelsFrame");
 
   frame.src="reels.html";
-  overlay.style.display="flex";
+
+  overlay.style.display="block";
 }
 
 function closeReels(){
+
   const overlay=document.getElementById("reelsOverlay");
+
   const frame=document.getElementById("reelsFrame");
 
   overlay.style.display="none";
+
   frame.src="";
 }
 
-document.getElementById("messageInput").addEventListener("keypress",e=>{
+document
+.getElementById("messageInput")
+.addEventListener("keypress",(e)=>{
+
   if(e.key==="Enter"){
     sendMessage();
   }
