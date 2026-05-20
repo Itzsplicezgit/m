@@ -6,206 +6,261 @@
 <title>Main Chat</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background: #fff;
-  overflow: hidden;
+html,body{
+  width:100%;
+  height:100%;
+  font-family:Arial,sans-serif;
+  background:#fff;
+  overflow:hidden;
 }
 
-.chat-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+.chat-container{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
-.header {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  border-bottom: 1px solid #e6e6e6;
+.header{
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 12px;
+  border-bottom:1px solid #e6e6e6;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.header img {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.pfp-clickable {
-  cursor: pointer;
+.header img{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  object-fit:cover;
 }
 
-.logout-btn {
-  background: #ff3b30;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
+.pfp-clickable{
+  cursor:pointer;
 }
 
-.messages {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
+.logout-btn{
+  background:#ff3b30;
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-.message {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 14px;
+.reels-btn{
+  background:#0095f6;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-.avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
+.messages{
+  flex:1;
+  overflow-y:auto;
+  padding:16px;
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-width: 75%;
+.message{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:14px;
 }
 
-.username {
-  font-size: 12px;
-  font-weight: bold;
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  object-fit:cover;
 }
 
-.bubble {
-  background: #f2f2f2;
-  padding: 10px 12px;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.content{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  max-width:75%;
 }
 
-.media {
-  width: 320px;
-  height: 210px;
-  object-fit: cover;
-  border-radius: 14px;
-  cursor: pointer;
+.username{
+  font-size:12px;
+  font-weight:bold;
 }
 
-.time {
-  font-size: 11px;
-  opacity: 0.6;
-  text-align: right;
+.bubble{
+  background:#f2f2f2;
+  padding:10px 12px;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
-.input-area {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  border-top: 1px solid #e6e6e6;
+.media{
+  width:320px;
+  height:210px;
+  object-fit:cover;
+  border-radius:14px;
+  cursor:pointer;
 }
 
-.input-area input {
-  flex: 1;
-  height: 44px;
-  border-radius: 22px;
-  border: 1px solid #ddd;
-  padding: 0 14px;
+.time{
+  font-size:11px;
+  opacity:.6;
+  text-align:right;
 }
 
-button {
-  border: none;
-  border-radius: 22px;
-  cursor: pointer;
-  background: #0095f6;
-  color: white;
+.input-area{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  border-top:1px solid #e6e6e6;
 }
 
-.upload-btn {
-  width: 44px;
-  font-size: 20px;
+.input-area input{
+  flex:1;
+  height:44px;
+  border-radius:22px;
+  border:1px solid #ddd;
+  padding:0 14px;
 }
 
-.send-btn {
-  padding: 0 18px;
+button{
+  border:none;
+  border-radius:22px;
+  cursor:pointer;
+  background:#0095f6;
+  color:white;
 }
 
-.fullscreen {
-  position: fixed;
-  inset: 0;
-  background: black;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+.upload-btn{
+  width:44px;
+  font-size:20px;
+}
+
+.send-btn{
+  padding:0 18px;
+}
+
+.fullscreen{
+  position:fixed;
+  inset:0;
+  background:black;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
 }
 
 .fullscreen img,
-.fullscreen video {
-  max-width: 95%;
-  max-height: 90%;
+.fullscreen video{
+  max-width:95%;
+  max-height:90%;
 }
 
-.close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
+.close{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-size:28px;
+  color:white;
+  cursor:pointer;
+  z-index:10001;
 }
 
-/* LOCK OVERLAY */
-.lock-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(255,255,255,0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
+.lock-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,.95);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
 }
 
-.lock-box {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 220px;
+.lock-box{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:220px;
 }
 
-.lock-box input {
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  padding: 0 10px;
+.lock-box input{
+  height:40px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  padding:0 10px;
 }
 
-.lock-box button {
-  height: 40px;
-  border-radius: 10px;
-  background: #0095f6;
-  color: white;
-  border: none;
-  cursor: pointer;
+.lock-box button{
+  height:40px;
+  border-radius:10px;
+  background:#0095f6;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+
+.reels-overlay{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  background:black;
+  z-index:100000;
+  display:none;
+  flex-direction:column;
+}
+
+.reels-frame{
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+.reels-close{
+  position:absolute;
+  top:15px;
+  right:20px;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:rgba(0,0,0,.7);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  cursor:pointer;
+  z-index:100001;
+}
+
+.tag{
+  color:#0095f6;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -228,14 +283,17 @@ button {
       <span id="myName"></span>
     </div>
 
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="header-right">
+      <button class="reels-btn" onclick="openReels()">Reels</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
   </div>
 
   <div class="messages" id="messages"></div>
 
   <div class="input-area">
     <input type="file" id="fileInput" accept="image/*,video/*" hidden>
-    <input type="text" id="messageInput" placeholder="Message...">
+    <input type="text" id="messageInput" placeholder="Message or @tag someone">
 
     <button class="upload-btn" onclick="document.getElementById('fileInput').click()">+</button>
     <button class="send-btn" onclick="sendMessage()">Send</button>
@@ -248,77 +306,114 @@ button {
   <div id="fullscreenContent"></div>
 </div>
 
+<div class="reels-overlay" id="reelsOverlay">
+  <div class="reels-close" onclick="closeReels()">✕</div>
+  <iframe class="reels-frame" src="" id="reelsFrame"></iframe>
+</div>
+
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
-const socket = io();
+const socket=io();
 
-const params = new URLSearchParams(window.location.search);
-const username = params.get("user") || "user";
+const params=new URLSearchParams(window.location.search);
+const username=params.get("user")||"user";
 
-const saved = JSON.parse(localStorage.getItem("chatUser")) || {};
-let profilePic = saved.profilePic || "user.png";
+const saved=JSON.parse(localStorage.getItem("chatUser"))||{};
+let profilePic=saved.profilePic||"user.png";
 
-document.getElementById("myName").textContent = username;
-document.getElementById("myPfp").src = profilePic;
+document.getElementById("myName").textContent=username;
+document.getElementById("myPfp").src=profilePic;
 
-/* LOGOUT */
-function logout() {
+requestNotificationPermission();
+
+function requestNotificationPermission(){
+  if("Notification" in window){
+    if(Notification.permission!=="granted"){
+      Notification.requestPermission();
+    }
+  }
+}
+
+function showNotification(title,body){
+  if("Notification" in window && Notification.permission==="granted"){
+    new Notification(title,{
+      body:body,
+      icon:profilePic
+    });
+  }
+}
+
+function logout(){
   localStorage.removeItem("chatUser");
-  window.location.href = "index.html";
+  window.location.href="index.html";
 }
 
-/* TIME */
-function getTime() {
-  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+function getTime(){
+  return new Date().toLocaleTimeString([],{
+    hour:"2-digit",
+    minute:"2-digit"
+  });
 }
 
-/* LOCK SYSTEM */
-let chatUnlocked = false;
+let chatUnlocked=false;
 
-function unlockChat() {
-  const pass = document.getElementById("unlockPass").value;
+function unlockChat(){
+  const pass=document.getElementById("unlockPass").value;
 
-  if (pass === "Tacos") {
-    chatUnlocked = true;
-    document.getElementById("lockOverlay").style.display = "none";
-  } else {
+  if(pass==="Tacos"){
+    chatUnlocked=true;
+    document.getElementById("lockOverlay").style.display="none";
+  }else{
     alert("Wrong password");
   }
 }
 
-/* SOCKET LOAD */
-socket.on("loadMessages", (msgs) => {
+socket.on("loadMessages",(msgs)=>{
   msgs.forEach(renderMessage);
 });
 
-socket.on("message", (msg) => {
+socket.on("message",(msg)=>{
   renderMessage(msg);
+
+  if(msg.user!==username){
+    showNotification(msg.user,msg.text || "Sent media");
+  }
+
+  if(msg.text && msg.text.includes("@"+username)){
+    showNotification("You were tagged",msg.user+" tagged you");
+  }
 });
 
-/* RENDER */
-function renderMessage(msg) {
-  const messages = document.getElementById("messages");
+function highlightTags(text){
+  return text.replace(
+    /@(\w+)/g,
+    '<span class="tag">@$1</span>'
+  );
+}
 
-  const div = document.createElement("div");
-  div.className = "message";
+function renderMessage(msg){
+  const messages=document.getElementById("messages");
 
-  let media = "";
+  const div=document.createElement("div");
+  div.className="message";
 
-  if (msg.type === "image") {
-    media = `<img class="media" src="${msg.url}" onclick="openFullscreen('image','${msg.url}')">`;
+  let media="";
+
+  if(msg.type==="image"){
+    media=`<img class="media" src="${msg.url}" onclick="openFullscreen('image','${msg.url}')">`;
   }
 
-  if (msg.type === "video") {
-    media = `<video class="media" muted onclick="openFullscreen('video','${msg.url}')"></video>`;
+  if(msg.type==="video"){
+    media=`<video class="media" src="${msg.url}" muted onclick="openFullscreen('video','${msg.url}')"></video>`;
   }
 
-  div.innerHTML = `
+  div.innerHTML=`
     <img class="avatar" src="${msg.pfp}">
     <div class="content">
       <div class="username">${msg.user}</div>
       <div class="bubble">
-        ${msg.text ? `<div>${msg.text}</div>` : ""}
+        ${msg.text ? `<div>${highlightTags(msg.text)}</div>` : ""}
         ${media}
         <div class="time">${msg.time}</div>
       </div>
@@ -326,74 +421,76 @@ function renderMessage(msg) {
   `;
 
   messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+  messages.scrollTop=messages.scrollHeight;
 }
 
-/* SEND */
-function sendMessage() {
-  if (!chatUnlocked) {
-    document.getElementById("lockOverlay").style.display = "flex";
+function sendMessage(){
+  if(!chatUnlocked){
+    document.getElementById("lockOverlay").style.display="flex";
     return;
   }
 
-  const input = document.getElementById("messageInput");
+  const input=document.getElementById("messageInput");
 
-  if (!input.value.trim()) return;
+  if(!input.value.trim()) return;
 
-  socket.emit("message", {
-    user: username,
-    pfp: profilePic,
-    text: input.value,
-    type: "text",
-    time: getTime()
+  socket.emit("message",{
+    user:username,
+    pfp:profilePic,
+    text:input.value,
+    type:"text",
+    time:getTime()
   });
 
-  input.value = "";
+  input.value="";
 }
 
-/* FILE UPLOAD */
-document.getElementById("fileInput").addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+document.getElementById("fileInput").addEventListener("change",async(e)=>{
+  const file=e.target.files[0];
 
-  const form = new FormData();
-  form.append("file", file);
+  if(!file) return;
 
-  const res = await fetch("/upload", {
-    method: "POST",
-    body: form
+  const form=new FormData();
+  form.append("file",file);
+
+  const res=await fetch("/upload",{
+    method:"POST",
+    body:form
   });
 
-  const data = await res.json();
+  const data=await res.json();
 
-  socket.emit("message", {
-    user: username,
-    pfp: profilePic,
-    url: data.url,
-    type: file.type.startsWith("image") ? "image" : "video",
-    time: getTime()
+  socket.emit("message",{
+    user:username,
+    pfp:profilePic,
+    url:data.url,
+    type:file.type.startsWith("image") ? "image" : "video",
+    time:getTime()
   });
 });
 
-/* PFP CHANGE */
-function changePfp() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
+function changePfp(){
+  const input=document.createElement("input");
 
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  input.type="file";
+  input.accept="image/*";
 
-    const reader = new FileReader();
+  input.onchange=(e)=>{
+    const file=e.target.files[0];
 
-    reader.onload = (event) => {
-      profilePic = event.target.result;
-      document.getElementById("myPfp").src = profilePic;
+    if(!file) return;
 
-      const saved = JSON.parse(localStorage.getItem("chatUser")) || {};
-      saved.profilePic = profilePic;
-      localStorage.setItem("chatUser", JSON.stringify(saved));
+    const reader=new FileReader();
+
+    reader.onload=(event)=>{
+      profilePic=event.target.result;
+
+      document.getElementById("myPfp").src=profilePic;
+
+      const saved=JSON.parse(localStorage.getItem("chatUser"))||{};
+      saved.profilePic=profilePic;
+
+      localStorage.setItem("chatUser",JSON.stringify(saved));
     };
 
     reader.readAsDataURL(file);
@@ -402,28 +499,44 @@ function changePfp() {
   input.click();
 }
 
-/* FULLSCREEN */
-function openFullscreen(type, url) {
-  const fs = document.getElementById("fullscreen");
-  const content = document.getElementById("fullscreenContent");
+function openFullscreen(type,url){
+  const fs=document.getElementById("fullscreen");
+  const content=document.getElementById("fullscreenContent");
 
-  if (type === "image") {
-    content.innerHTML = `<img src="${url}">`;
-  } else {
-    content.innerHTML = `<video src="${url}" controls autoplay></video>`;
+  if(type==="image"){
+    content.innerHTML=`<img src="${url}">`;
+  }else{
+    content.innerHTML=`<video src="${url}" controls autoplay></video>`;
   }
 
-  fs.style.display = "flex";
+  fs.style.display="flex";
 }
 
-function closeFullscreen() {
-  document.getElementById("fullscreen").style.display = "none";
-  document.getElementById("fullscreenContent").innerHTML = "";
+function closeFullscreen(){
+  document.getElementById("fullscreen").style.display="none";
+  document.getElementById("fullscreenContent").innerHTML="";
 }
 
-/* ENTER */
-document.getElementById("messageInput").addEventListener("keypress", e => {
-  if (e.key === "Enter") sendMessage();
+function openReels(){
+  const overlay=document.getElementById("reelsOverlay");
+  const frame=document.getElementById("reelsFrame");
+
+  frame.src="reels.html";
+  overlay.style.display="flex";
+}
+
+function closeReels(){
+  const overlay=document.getElementById("reelsOverlay");
+  const frame=document.getElementById("reelsFrame");
+
+  overlay.style.display="none";
+  frame.src="";
+}
+
+document.getElementById("messageInput").addEventListener("keypress",e=>{
+  if(e.key==="Enter"){
+    sendMessage();
+  }
 });
 </script>
 
