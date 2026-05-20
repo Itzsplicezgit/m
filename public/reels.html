@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reels</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  font-family:Arial,sans-serif;
+  background:#fff;
+  overflow:hidden;
+}
+
+.reels-page{
+  width:100%;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+}
+
+.reel-card{
+  width:360px;
+  height:640px;
+  border-radius:22px;
+  overflow:hidden;
+  position:relative;
+  background:black;
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:black;
+}
+
+.top-bar{
+  position:absolute;
+  top:14px;
+  left:14px;
+  right:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:10;
+}
+
+.reels-title{
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.reload-btn{
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+}
+
+.bottom-bar{
+  position:absolute;
+  bottom:18px;
+  left:18px;
+  right:18px;
+  display:flex;
+  justify-content:center;
+  z-index:10;
+}
+
+.send-btn{
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  background:white;
+  color:black;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.loading{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:18px;
+  z-index:20;
+  background:black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="reels-page">
+
+  <div class="reel-card">
+
+    <div class="loading" id="loading">
+      Loading...
+    </div>
+
+    <div class="top-bar">
+      <div class="reels-title">
+        Reels
+      </div>
+
+      <button
+        class="reload-btn"
+        onclick="nextVideo()"
+      >
+        ↻
+      </button>
+    </div>
+
+    <video
+      id="reelVideo"
+      autoplay
+      muted
+      playsinline
+      loop
+    ></video>
+
+    <div class="bottom-bar">
+      <button
+        class="send-btn"
+        onclick="sendVideo()"
+      >
+        >
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const video=document.getElementById("reelVideo");
+
+const loading=document.getElementById("loading");
+
+let currentVideo="";
+
+function randomVideo(){
+
+  const number=
+    Math.floor(Math.random()*51)+1;
+
+  return "/videos/" + number + ".mp4";
+}
+
+function nextVideo(){
+
+  loading.style.display="flex";
+
+  const random=randomVideo();
+
+  currentVideo=random;
+
+  video.src=random;
+
+  video.onloadeddata=()=>{
+
+    loading.style.display="none";
+
+    video.play();
+  };
+
+  video.onerror=()=>{
+    nextVideo();
+  };
+}
+
+function sendVideo(){
+
+  if(!currentVideo) return;
+
+  window.parent.postMessage({
+    type:"sendReel",
+    url:currentVideo
+  },"*");
+}
+
+video.addEventListener("click",()=>{
+
+  if(video.paused){
+    video.play();
+  }else{
+    video.pause();
+  }
+});
+
+nextVideo();
+</script>
+
+</body>
+</html>
