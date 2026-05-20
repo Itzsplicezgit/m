@@ -389,8 +389,17 @@ function requestNotificationPermission(){
 }
 
 function showNotification(title,body){
-  if("Notification" in window &&
-     Notification.permission==="granted"){
+
+  if(
+    document.hasFocus()
+  ){
+    return;
+  }
+
+  if(
+    "Notification" in window &&
+    Notification.permission==="granted"
+  ){
 
     new Notification(title,{
       body:body,
@@ -516,16 +525,23 @@ function renderMessage(msg){
         <button
           onclick="unsendMessage(${msg.id})"
           style="
-            margin-top:6px;
+            margin-top:4px;
+            width:18px;
+            height:18px;
+            min-height:18px;
+            border-radius:50%;
             background:#ff3b30;
             color:white;
             border:none;
-            border-radius:10px;
-            padding:6px;
+            font-size:11px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:0;
             cursor:pointer;
           "
         >
-          Unsend
+          ×
         </button>
         `
         : ""
