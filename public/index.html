@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  font-family:Arial,sans-serif;
+  background:#f3f4f6;
+  overflow:hidden;
+}
+
+.screen{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.card{
+  width:100%;
+  max-width:350px;
+  background:white;
+  border-radius:20px;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.title{
+  font-size:28px;
+  font-weight:bold;
+  text-align:center;
+}
+
+.subtitle{
+  font-size:14px;
+  color:#666;
+  text-align:center;
+  margin-bottom:8px;
+}
+
+input{
+  width:100%;
+  height:48px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:0 14px;
+  font-size:15px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#0095f6;
+}
+
+button{
+  height:48px;
+  border:none;
+  border-radius:12px;
+  background:#0095f6;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.switch{
+  text-align:center;
+  font-size:14px;
+  color:#0095f6;
+  cursor:pointer;
+}
+
+.hidden{
+  display:none;
+}
+
+.preview{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:auto;
+  border:3px solid #eee;
+}
+
+.upload-box{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.loading{
+  text-align:center;
+  font-size:14px;
+  color:#666;
+}
+
+.error{
+  color:#ff3b30;
+  font-size:13px;
+  text-align:center;
+}
+
+.success{
+  color:#16a34a;
+  font-size:13px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="screen">
+
+  <div class="card" id="loginCard">
+
+    <div class="title">Welcome</div>
+    <div class="subtitle">I update this app alot so you will have to remake your accs every sunday</div>
+
+    <input id="loginUser" placeholder="Username">
+    <input id="loginPass" type="password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <div class="switch" onclick="showSignup()">
+      Create account
+    </div>
+
+    <div class="error" id="loginError"></div>
+
+  </div>
+
+  <div class="card hidden" id="signupCard">
+
+    <div class="title">Create Account</div>
+    <div class="subtitle">Sign up to continue</div>
+
+    <input id="signupUser" placeholder="Username">
+    <input id="signupPass" type="password" placeholder="Password">
+
+    <div class="upload-box">
+      <input type="file" id="pfpInput" accept="image/*">
+      <img id="preview" class="preview hidden">
+    </div>
+
+    <button id="signupBtn" onclick="signup()" disabled>
+      Create Account
+    </button>
+
+    <div class="switch" onclick="showLogin()">
+      Back to login
+    </div>
+
+    <div class="error" id="signupError"></div>
+    <div class="success" id="signupSuccess"></div>
+
+  </div>
+
+</div>
+
+<script>
+const API="/api";
+
+let profilePic="";
+
+function showSignup(){
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("signupCard").classList.remove("hidden");
+}
+
+function showLogin(){
+  document.getElementById("signupCard").classList.add("hidden");
+  document.getElementById("loginCard").classList.remove("hidden");
+}
+
+document.getElementById("pfpInput").addEventListener("change",(e)=>{
+  const file=e.target.files[0];
+
+  if(!file) return;
+
+  const reader=new FileReader();
+
+  reader.onload=(event)=>{
+    profilePic=event.target.result;
+
+    const preview=document.getElementById("preview");
+
+    preview.src=profilePic;
+    preview.classList.remove("hidden");
+
+    document.getElementById("signupBtn").disabled=false;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+async function signup(){
+  const username=document.getElementById("signupUser").value.trim();
+  const password=document.getElementById("signupPass").value.trim();
+
+  const error=document.getElementById("signupError");
+  const success=document.getElementById("signupSuccess");
+
+  error.textContent="";
+  success.textContent="";
+
+  if(!username || !password){
+    error.textContent="Fill all fields";
+    return;
+  }
+
+  if(!profilePic){
+    error.textContent="Profile picture required";
+    return;
+  }
+
+  try{
+    const res=await fetch(API + "/signup",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        username,
+        password,
+        profilePic
+      })
+    });
+
+    const data=await res.json();
+
+    if(!res.ok){
+      error.textContent=data.error || "Signup failed";
+      return;
+    }
+
+    localStorage.setItem("token",data.token);
+
+    success.textContent="Account created";
+
+    setTimeout(()=>{
+      window.location.href="main.html";
+    },800);
+
+  }catch(err){
+    error.textContent="Server error";
+  }
+}
+
+async function login(){
+  const username=document.getElementById("loginUser").value.trim();
+  const password=document.getElementById("loginPass").value.trim();
+
+  const error=document.getElementById("loginError");
+
+  error.textContent="";
+
+  if(!username || !password){
+    error.textContent="Fill all fields";
+    return;
+  }
+
+  try{
+    const res=await fetch(API + "/login",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        username,
+        password
+      })
+    });
+
+    const data=await res.json();
+
+    if(!res.ok){
+      error.textContent=data.error || "Invalid login";
+      return;
+    }
+
+    localStorage.setItem("token",data.token);
+
+    window.location.href="main.html";
+
+  }catch(err){
+    error.textContent="Server error";
+  }
+}
+</script>
+
+</body>
+</html>
